@@ -49,6 +49,14 @@ async function run() {
         });
 
 
+        // Add Toy
+        app.post('/all-cars', async (req, res) => {
+            const addToy = req.body;
+            // console.log(addToy);
+
+            const result = await carCollection.insertOne(addToy);
+            res.send(result);
+        })
 
 
         // Send a ping to confirm a successful connection
