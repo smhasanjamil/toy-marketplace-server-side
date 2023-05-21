@@ -71,6 +71,7 @@ async function run() {
             res.send(result);
         })
 
+
         // Delete 
         app.delete('/all-cars/:id', async (req, res) => {
             const id = req.params.id;
@@ -78,6 +79,54 @@ async function run() {
             const result = await carCollection.deleteOne(query);
             res.send(result);
         })
+
+        // // For update operation, find a specific id and details
+        // app.get('/all-cars/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: new ObjectId(id) };
+        //     const result = await carCollection.findOne(query);
+        //     res.send(result);
+
+        // })
+
+        // // Update
+        // app.patch('/all-cars/:id', async (req, res) => {
+        //     const updateCar = req.body;
+        //     console.log(updateCar);
+        //     // const query = { _id: new ObjectId(id) };
+        //     // const result = await carCollection.deleteOne(query);
+        //     // res.send(result);
+        // })
+
+        app.get('/all-cars/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await carCollection.findOne(query);
+            res.send(result);
+
+        })
+
+
+        app.put('/all-cars/:id', async (req, res) => {
+            const id = req.params.id;
+            const car = req.body;
+            // console.log(car);
+            const query = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedCar = {
+                $set: {
+                    price: car.price,
+                    availableQuantity: car.availableQuantity,
+                    description: car.description
+                }
+            }
+            const result = await carCollection.updateOne(query, updatedCar, options);
+            res.send(result);
+
+        })
+
+
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
