@@ -35,7 +35,7 @@ async function run() {
         const carCollection = client.db("motorMart").collection("cars");
 
 
-        // Indexing for search
+        // Indexing for search start
         const indexKeys = { toyName: 1, subCategory: 1 };
         const indexOption = { name: "titleCategory" };
         const result = await carCollection.createIndex(indexKeys, indexOption);
@@ -52,15 +52,11 @@ async function run() {
             res.send(result);
 
         })
+        // Indexing for search end
 
 
 
-
-
-
-
-
-
+        // Get all toys
 
         app.get('/all-cars', async (req, res) => {
             const cursor = carCollection.find();
@@ -80,6 +76,7 @@ async function run() {
         // Find my to
         app.get('/all-car', async (req, res) => {
             // console.log(req.query.sellerEmail); 
+
             let query = {};
             if (req.query?.sellerEmail) {
                 query = { sellerEmail: req.query.sellerEmail }
@@ -88,6 +85,7 @@ async function run() {
             res.send(result);
         })
 
+        
 
 
         // Add Toy
