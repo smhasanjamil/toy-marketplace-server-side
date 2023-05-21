@@ -49,6 +49,19 @@ async function run() {
         });
 
 
+        // Find my to
+        app.get('/all-car', async (req, res) => {
+            // console.log(req.query.sellerEmail); 
+            let query = {};
+            if (req.query?.sellerEmail) {
+                query = { sellerEmail: req.query.sellerEmail }
+            }
+            const result = await carCollection.find(query).toArray();
+            res.send(result);
+        })
+
+
+
         // Add Toy
         app.post('/all-cars', async (req, res) => {
             const addToy = req.body;
