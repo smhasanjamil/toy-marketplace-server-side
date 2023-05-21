@@ -34,6 +34,34 @@ async function run() {
 
         const carCollection = client.db("motorMart").collection("cars");
 
+
+        // Indexing for search
+        const indexKeys = { toyName: 1, subCategory: 1 };
+        const indexOption = { name: "titleCategory" };
+        const result = await carCollection.createIndex(indexKeys, indexOption);
+
+        app.get('/car-search/:text', async (req, res) => {
+            const searchText = req.params.text;
+
+            const result = await carCollection.find({
+                $or: [
+                    { toyName: { $regex: searchText, $options: "i" } },
+                    { subCategory: { $regex: searchText, $options: "i" } },
+                ]
+            }).toArray()
+            res.send(result);
+
+        })
+
+
+
+
+
+
+
+
+
+
         app.get('/all-cars', async (req, res) => {
             const cursor = carCollection.find();
             const result = await cursor.toArray();
@@ -80,24 +108,8 @@ async function run() {
             res.send(result);
         })
 
-        // // For update operation, find a specific id and details
-        // app.get('/all-cars/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: new ObjectId(id) };
-        //     const result = await carCollection.findOne(query);
-        //     res.send(result);
 
-        // })
-
-        // // Update
-        // app.patch('/all-cars/:id', async (req, res) => {
-        //     const updateCar = req.body;
-        //     console.log(updateCar);
-        //     // const query = { _id: new ObjectId(id) };
-        //     // const result = await carCollection.deleteOne(query);
-        //     // res.send(result);
-        // })
-
+        // For update operation, find a specific id and details
         app.get('/all-cars/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
@@ -106,7 +118,7 @@ async function run() {
 
         })
 
-
+        // Update
         app.put('/all-cars/:id', async (req, res) => {
             const id = req.params.id;
             const car = req.body;
